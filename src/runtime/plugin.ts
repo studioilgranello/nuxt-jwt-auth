@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useState, addRouteMiddleware, useCookie, useRuntimeConfig } from '#imports'
+import { defineNuxtPlugin, useState, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
 import { ModuleOptions } from './types/module'
 import { Callback, AuthState, JwtAuthPlugin } from './types/plugin'
 import { ofetch } from 'ofetch'

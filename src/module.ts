@@ -34,13 +34,20 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.public.nuxtJwtAuth = options
 
-    // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addPlugin(resolver.resolve('./runtime/plugin'))
+
+    addPlugin(resolver.resolve('./runtime/composition'))
 
     addImports({
       name: 'useJwtAuth', // name of the composable to be used
       as: 'useJwtAuth',
       from: resolver.resolve('runtime/composables/useJwtAuth') // path of composable
     })
+
+    nuxt.hook('prepare:types', ({ references }) => {
+      const typesFile = resolver.resolve('./runtime/types')
+      references.push({ path: resolver.resolve(nuxt.options.buildDir, typesFile) })
+    })
+
   }
 })
