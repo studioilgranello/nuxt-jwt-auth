@@ -1,5 +1,5 @@
 import { defineNuxtModule, addPlugin, createResolver, addImports } from '@nuxt/kit'
-import { Endpoints, Redirects } from './runtime/types/module'
+import { Endpoints, Redirects } from './types'
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
@@ -37,9 +37,9 @@ export default defineNuxtModule<ModuleOptions>({
     addPlugin(resolver.resolve('./runtime/plugin'))
 
     addImports({
-      name: 'useJwtAuth', // name of the composable to be used
+      name: 'useJwtAuth',
       as: 'useJwtAuth',
-      from: resolver.resolve('runtime/composables/useJwtAuth') // path of composable
+      from: resolver.resolve('runtime/composables')
     })
 
   }

@@ -1,6 +1,5 @@
 import { defineNuxtPlugin, useState, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions } from './types/module'
-import { Callback, AuthState, JwtAuthPlugin } from './types/plugin'
+import { ModuleOptions, Callback, AuthState } from '../types'
 import { ofetch } from 'ofetch'
 
 export default defineNuxtPlugin(() => {
@@ -35,12 +34,10 @@ export default defineNuxtPlugin(() => {
   })
 
   const getToken = () => {
-    console.log('getting token')
     auth.value.token = useCookie('nuxt-jwt-auth-token').value
   }
 
   const setToken = (token: string) => {
-    console.log('setting token', token)
     useCookie('nuxt-jwt-auth-token').value = token
   }
 
@@ -48,12 +45,12 @@ export default defineNuxtPlugin(() => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
-  const apiReq = ofetch.create({
+  const authFetch = ofetch.create({
     baseURL: config.baseUrl,
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      'Authorization': 'Bearer ' + auth.value.token
+      Authorization: 'Bearer ' + auth.value.token
     } as HeadersInit
   })
 
@@ -67,7 +64,7 @@ export default defineNuxtPlugin(() => {
     }
 
     try {
-      const user = await apiReq(config.endpoints.user)
+      const user = await authFetch(config.endpoints.user)
       if (user) {
         auth.value.loggedIn = true
         auth.value.user = user
@@ -81,7 +78,7 @@ export default defineNuxtPlugin(() => {
   const login = async (data: any, callback?: Callback | undefined) => {
 
     try {
-      const response = await apiReq(config.endpoints.login, {
+      const response = await authFetch(config.endpoints.login, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -105,7 +102,7 @@ export default defineNuxtPlugin(() => {
 
   const logout = async (callback?: Callback | undefined) => {
     try {
-      const response = await apiReq(config.endpoints.logout, {
+      const response = await authFetch(config.endpoints.logout, {
         method: 'POST'
       })
       if (callback !== undefined) {
@@ -124,16 +121,14 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  const jwtAuth: JwtAuthPlugin = {
-    login,
-    getUser,
-    logout,
-    apiReq
-  }
-
   return {
     provide: {
-      jwtAuth
+      jwtAuth: {
+        login,
+        getUser,
+        logout,
+        authFetch
+      }
     }
   }
 
