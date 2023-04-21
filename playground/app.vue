@@ -1,16 +1,5 @@
 <template>
-  <div>
-    Nuxt module playground!
-  </div>
+  <nuxt-layout>
+    <nuxt-page />
+  </nuxt-layout>
 </template>
-
-<script setup lang="ts">
-import { onMounted, useNuxtApp } from '#imports'
-
-const {$jwtAuth} = useNuxtApp()
-
-onMounted( async () => {
-  await $jwtAuth.logout()
-})
-
-</script>

@@ -1,10 +1,10 @@
 import { defineNuxtPlugin, useState, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions, Callback, AuthState } from '../types'
-import { ofetch } from 'ofetch'
+import { ModuleOptions, Callback, AuthState, GetUser, Login, Logout } from '../types'
+import { $Fetch, ofetch } from 'ofetch'
 
 export default defineNuxtPlugin(() => {
   //
-  const config: ModuleOptions = useRuntimeConfig().nuxtJwtAuth
+  const config: ModuleOptions = useRuntimeConfig().public.nuxtJwtAuth
   //
   const auth = useState<AuthState>('jwt-auth', () => {
     return {
@@ -34,7 +34,7 @@ export default defineNuxtPlugin(() => {
   })
 
   const getToken = () => {
-    auth.value.token = useCookie('nuxt-jwt-auth-token').value
+    auth.value.token = useCookie('nuxt-jwt-auth-token').value ?? null
   }
 
   const setToken = (token: string) => {
@@ -45,7 +45,7 @@ export default defineNuxtPlugin(() => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
-  const authFetch = ofetch.create({
+  const fetch: $Fetch = ofetch.create({
     baseURL: config.baseUrl,
     credentials: 'include',
     headers: {
@@ -54,17 +54,17 @@ export default defineNuxtPlugin(() => {
     } as HeadersInit
   })
 
-  const getUser = async () => {
+  const getUser: GetUser = async () => {
     if (auth.value.loggedIn && auth.value.user) {
       return auth.value.user
     }
 
     if (!auth.value.token) {
-      return
+      return null
     }
 
     try {
-      const user = await authFetch(config.endpoints.user)
+      const user = await fetch(config.endpoints.user)
       if (user) {
         auth.value.loggedIn = true
         auth.value.user = user
@@ -73,14 +73,16 @@ export default defineNuxtPlugin(() => {
     } catch (error) {
       // console.log(error)
     }
+
+    return null
   }
 
-  const login = async (data: any, callback?: Callback | undefined) => {
+  const login: Login = async (credentials: any, callback?: Callback | undefined) => {
 
     try {
-      const response = await authFetch(config.endpoints.login, {
+      const response = await fetch(config.endpoints.login, {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: JSON.stringify(credentials),
         headers: {
           Accept: 'application/json'
         } as HeadersInit
@@ -100,9 +102,9 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  const logout = async (callback?: Callback | undefined) => {
+  const logout: Logout = async (callback?: Callback | undefined) => {
     try {
-      const response = await authFetch(config.endpoints.logout, {
+      const response = await fetch(config.endpoints.logout, {
         method: 'POST'
       })
       if (callback !== undefined) {
@@ -127,7 +129,7 @@ export default defineNuxtPlugin(() => {
         login,
         getUser,
         logout,
-        authFetch
+        fetch
       }
     }
   }

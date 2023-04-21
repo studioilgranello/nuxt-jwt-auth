@@ -13,7 +13,6 @@ export interface Redirects {
 }
 
 export interface ModuleOptions {
-  token: boolean
   baseUrl: string
   endpoints: Endpoints
   redirects: Redirects
@@ -28,11 +27,17 @@ export interface AuthState {
 
 export type Callback = (response: any) => void
 
+export type Login = (credentials: any, callback?: Callback | undefined) => Promise<void>
+
+export type GetUser = <T>() => Promise<T|null>
+
+export type Logout = (callback?: Callback | undefined) => Promise<void>
+
 export interface JwtAuthPlugin {
-  login: (data: any, callback?: Callback | undefined) => Promise<void>
-  getUser: () => Promise<any>
-  logout: (callback?: Callback | undefined) => Promise<void>
-  authFetch: $Fetch
+  login: Login
+  getUser: GetUser
+  logout: Logout
+  fetch: $Fetch
 }
 
 // @ts-ignore
