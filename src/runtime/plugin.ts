@@ -1,47 +1,38 @@
-import { defineNuxtPlugin, useState, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions, Callback, AuthState, GetUser, Login, Logout } from '../types'
+import { defineNuxtPlugin, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
+import { ModuleOptions, Callback, GetUser, Login, Logout, CookieData, AuthState } from '../types'
 import { $Fetch, ofetch } from 'ofetch'
+import { useJwtAuth } from './composables'
 
 export default defineNuxtPlugin(() => {
   //
   const config: ModuleOptions = useRuntimeConfig().public.nuxtJwtAuth
   //
-  const auth = useState<AuthState>('jwt-auth', () => {
-    return {
-      user: null,
-      loggedIn: false,
-      token: null
-    }
-  })
-
-  addRouteMiddleware('fetch-user', async () => {
-    getToken()
-
-    await getUser()
-
-  }, { global: true })
+  const authState: AuthState = useJwtAuth()
 
   addRouteMiddleware('auth', async () => {
-    if (!auth.value.loggedIn) {
+    if (!authState.loggedIn) {
       return config.redirects.login
     }
   })
 
   addRouteMiddleware('guest', async () => {
-    if (auth.value.loggedIn) {
+    if (authState.loggedIn) {
       return config.redirects.home
     }
   })
 
-  const getToken = () => {
-    auth.value.token = useCookie('nuxt-jwt-auth-token').value ?? null
+  const setCookie = (data: CookieData) => {
+    const cookie = useCookie('nuxt-jwt-auth-token', {
+      expires: new Date(Date.now() + 12096e5), // 2 weeks from now
+      sameSite: 'strict'
+    })
+    cookie.value = JSON.stringify({
+      token: data.token,
+      user: data.user
+    } as CookieData)
   }
 
-  const setToken = (token: string) => {
-    useCookie('nuxt-jwt-auth-token').value = token
-  }
-
-  const clearToken = () => {
+  const clearCookie = () => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
@@ -50,32 +41,9 @@ export default defineNuxtPlugin(() => {
     credentials: 'include',
     headers: {
       Accept: 'application/json',
-      Authorization: 'Bearer ' + auth.value.token
+      Authorization: 'Bearer ' + authState?.token
     } as HeadersInit
   })
-
-  const getUser: GetUser = async () => {
-    if (auth.value.loggedIn && auth.value.user) {
-      return auth.value.user
-    }
-
-    if (!auth.value.token) {
-      return null
-    }
-
-    try {
-      const user = await fetch(config.endpoints.user)
-      if (user) {
-        auth.value.loggedIn = true
-        auth.value.user = user
-        return user
-      }
-    } catch (error) {
-      // console.log(error)
-    }
-
-    return null
-  }
 
   const login: Login = async (credentials: any, callback?: Callback | undefined) => {
 
@@ -88,8 +56,8 @@ export default defineNuxtPlugin(() => {
         } as HeadersInit
       })
 
-      if (response?.token) {
-        setToken(response.token)
+      if (response?.token && response?.user) {
+        setCookie(response as CookieData)
       }
 
       if (callback !== undefined) {
@@ -112,14 +80,13 @@ export default defineNuxtPlugin(() => {
         return
       }
 
-      window.location.replace(config.redirects.logout)
     } catch (error) {
       console.log(error)
     } finally {
-      auth.value.loggedIn = false
-      auth.value.user = null
-      auth.value.token = null
-      clearToken()
+
+      clearCookie()
+      window.location.replace(config.redirects.logout)
+
     }
   }
 
@@ -127,7 +94,6 @@ export default defineNuxtPlugin(() => {
     provide: {
       jwtAuth: {
         login,
-        getUser,
         logout,
         fetch
       }

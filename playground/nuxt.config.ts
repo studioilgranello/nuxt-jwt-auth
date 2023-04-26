@@ -1,8 +1,8 @@
 export default defineNuxtConfig({
-  css: ["bootstrap/dist/css/bootstrap.min.css"],
+  css: ['bootstrap/dist/css/bootstrap.min.css'],
   modules: ['../src/module'],
   nuxtJwtAuth: {
-    baseUrl: 'http://unogmall.test/api',
+    baseUrl: 'http://homestead.test/api',
     endpoints: {
       login: '/login',
       logout: '/logout',

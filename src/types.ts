@@ -18,11 +18,13 @@ export interface ModuleOptions {
   redirects: Redirects
 }
 
-
-export interface AuthState {
+export interface CookieData {
   user: any
+  token: string | null
+}
+
+export interface AuthState extends CookieData {
   loggedIn: boolean
-  token: string|null
 }
 
 export type Callback = (response: any) => void
