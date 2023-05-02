@@ -117,6 +117,56 @@ Please note that it is requested that the backend responds to the login request 
 
 ---
 
+### Signup
+This modules provides the $jwtAuth plugin, which contains signup method.
+
+Signup function accepts registration data, which are passed as-is to the backend, as first argument.
+You can optionally provide a callback function as second argument. This function will receive the response from the backend.
+
+If no callback function is provided, the user will be redirected to the `home` route specified in configuration after successful signup.
+
+```vue
+<script setup>
+const { $jwtAuth } = useNuxtApp()
+const router = useRouter()
+
+async function signup() {
+  try {
+    await $jwtAuth.signup(
+      {
+        username: 'Mario Rossi',
+        email: 'email@example.com',
+        password: 'supersecretpassword',
+        password_confirm: 'supersecretpassword'
+      },
+      // optional callback function
+      (data) => {
+        console.log(data)
+        router.push('/account')
+      }
+    )
+  } catch (e) {
+    // your error handling
+  }
+}
+</script>
+```
+
+Please note that it is requested that the backend responds to the signup request with a JSON object containing both token and user properties:
+
+```json
+{
+  "token": "1|TjVJavoOkerwXViiRwLBLsd1xGSRoYosiO87zSEr",
+  "user": {
+    "name": "Mario",
+    "surname": "Rossi",
+    "address": "Fake St. 123"
+  }
+}
+```
+
+---
+
 ### Route middlewares
 This modules provides two route middleware you can optionally add to pages.
 

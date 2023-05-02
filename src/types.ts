@@ -3,6 +3,7 @@ import { $Fetch } from 'ofetch'
 export interface Endpoints {
   login: string
   logout: string
+  signup: string
   user: string
 }
 
@@ -35,10 +36,13 @@ export type GetUser = <T>() => Promise<T|null>
 
 export type Logout = (callback?: Callback | undefined) => Promise<void>
 
+export type Signup = (data: any, callback?: Callback | undefined) => Promise<void>
+
 export interface JwtAuthPlugin {
   login: Login
   getUser: GetUser
   logout: Logout
+  signup: Signup
   fetch: $Fetch
 }
 

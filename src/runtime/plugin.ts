@@ -1,5 +1,5 @@
 import { defineNuxtPlugin, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions, Callback, GetUser, Login, Logout, CookieData, AuthState } from '../types'
+import { ModuleOptions, Callback, Login, Logout, CookieData, AuthState, Signup } from '../types'
 import { $Fetch, ofetch } from 'ofetch'
 import { useJwtAuth } from './composables'
 
@@ -90,11 +90,37 @@ export default defineNuxtPlugin(() => {
     }
   }
 
+  const signup: Signup = async (data: any, callback?: Callback | undefined) => {
+
+    try {
+      const response = await fetch(config.endpoints.signup, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          Accept: 'application/json'
+        } as HeadersInit
+      })
+
+      if (response?.token && response?.user) {
+        setCookie(response as CookieData)
+      }
+
+      if (callback !== undefined) {
+        callback(response)
+        return
+      }
+      window.location.replace(config.redirects.home)
+    } catch (error: any) {
+      throw error.data
+    }
+  }
+
   return {
     provide: {
       jwtAuth: {
         login,
         logout,
+        signup,
         fetch
       }
     }

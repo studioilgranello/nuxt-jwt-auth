@@ -13,6 +13,7 @@ const defaults: ModuleOptions = {
   endpoints: {
     login: '/login',
     logout: '/logout',
+    signup: '/signup',
     user: '/user'
   },
   redirects: {

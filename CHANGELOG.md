@@ -1,3 +1,6 @@
+## v0.0.14
+
+- added signup function
 
 ## v0.0.13
 
