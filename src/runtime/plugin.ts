@@ -85,7 +85,7 @@ export default defineNuxtPlugin(() => {
     } finally {
 
       clearCookie()
-      window.location.replace(config.redirects.logout)
+      window.location.replace(config.redirects.home)
 
     }
   }
