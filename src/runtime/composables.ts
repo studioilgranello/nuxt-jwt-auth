@@ -1,23 +1,15 @@
+import {reactive} from 'vue'
 import { useCookie } from '#app'
 import { AuthState, CookieData } from '../types'
 
 export function useJwtAuth () {
 
-  if (useCookie<CookieData>('nuxt-jwt-auth-token').value) {
-    
-    return {
-      ...useCookie<CookieData>('nuxt-jwt-auth-token').value,
-      loggedIn: true
-    } as AuthState
+  const cookie = useCookie<CookieData>('nuxt-jwt-auth-token').value
+  const authState = reactive<AuthState>({
+    ...cookie,
+    loggedIn: !!cookie
+  })
 
-  } else {
-
-    return {
-      user: null,
-      token: null,
-      loggedIn: false
-    } as AuthState
-    
-  }
+  return authState
   
 }

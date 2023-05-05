@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.16
+
+- composable properties are now reactive
+
 ## v0.0.15
 
 - fix redirect after logout
