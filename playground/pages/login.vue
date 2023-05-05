@@ -38,9 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useNuxtApp, definePageMeta } from '#imports'
+import { ref, useNuxtApp, definePageMeta, useRouter } from '#imports'
 
 const {$jwtAuth} = useNuxtApp()
+const router = useRouter()
 
 definePageMeta({
   middleware: ['guest']
@@ -53,6 +54,9 @@ function onLogin () {
   $jwtAuth.login({
     email: email.value,
     password: password.value
+  }, () => {
+    router.push('/')
+    router.go(0)
   })
 }
 

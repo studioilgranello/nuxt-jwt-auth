@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     endpoints: {
       login: '/login',
       logout: '/logout',
+      signup: '/signup',
       user: '/user'
     },
     redirects: {
