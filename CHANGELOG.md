@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.17
+
+- plugin now exports also plain headers for api fetch (to use in nuxt's useFetch)
+
 ## v0.0.16
 
 - composable properties are now reactive

@@ -44,6 +44,7 @@ export interface JwtAuthPlugin {
   logout: Logout
   signup: Signup
   fetch: $Fetch
+  headers: HeadersInit
 }
 
 // @ts-ignore

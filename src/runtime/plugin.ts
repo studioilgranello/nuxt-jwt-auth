@@ -1,3 +1,4 @@
+import { ref } from '#imports'
 import { defineNuxtPlugin, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
 import { ModuleOptions, Callback, Login, Logout, CookieData, AuthState, Signup } from '../types'
 import { $Fetch, ofetch } from 'ofetch'
@@ -36,13 +37,15 @@ export default defineNuxtPlugin(() => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
+  const authorizedRequestHeaders = ref<HeadersInit>({
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + authState?.token
+  })
+
   const fetch: $Fetch = ofetch.create({
     baseURL: config.baseUrl,
     credentials: 'include',
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + authState?.token
-    } as HeadersInit
+    headers: authorizedRequestHeaders.value
   })
 
   const login: Login = async (credentials: any, callback?: Callback | undefined) => {
@@ -121,7 +124,8 @@ export default defineNuxtPlugin(() => {
         login,
         logout,
         signup,
-        fetch
+        fetch,
+        headers: authorizedRequestHeaders.value
       }
     }
   }
