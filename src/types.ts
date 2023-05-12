@@ -26,6 +26,7 @@ export interface CookieData {
 
 export interface AuthState extends CookieData {
   loggedIn: boolean
+  headers: HeadersInit
 }
 
 export type Callback = (response: any) => void
@@ -39,6 +40,7 @@ export type Logout = (callback?: Callback | undefined) => Promise<void>
 export type Signup = (data: any, callback?: Callback | undefined) => Promise<void>
 
 export interface JwtAuthPlugin {
+  state: AuthState
   login: Login
   getUser: GetUser
   logout: Logout

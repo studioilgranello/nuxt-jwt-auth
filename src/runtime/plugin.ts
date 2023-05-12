@@ -5,32 +5,37 @@ import { $Fetch, ofetch } from 'ofetch'
 import { useJwtAuth } from './composables'
 
 export default defineNuxtPlugin(() => {
-  //
+
   const config: ModuleOptions = useRuntimeConfig().public.nuxtJwtAuth
-  //
+
+  const cookie = useCookie<CookieData>('nuxt-jwt-auth-token', {
+    expires: new Date(Date.now() + 12096e5), // 2 weeks from now
+    sameSite: 'strict'
+  })
+
   const authState: AuthState = useJwtAuth()
 
   addRouteMiddleware('auth', async () => {
-    if (!authState.loggedIn) {
+    // using cookie value instead of authState.loggedIn because
+    // when navigating to protected route right after login (without full server reload)
+    // authState is not updated
+    if (!cookie.value?.token) {
       return config.redirects.login
     }
   })
 
   addRouteMiddleware('guest', async () => {
-    if (authState.loggedIn) {
+    // see above
+    if (cookie.value?.token) {
       return config.redirects.home
     }
   })
 
   const setCookie = (data: CookieData) => {
-    const cookie = useCookie('nuxt-jwt-auth-token', {
-      expires: new Date(Date.now() + 12096e5), // 2 weeks from now
-      sameSite: 'strict'
-    })
-    cookie.value = JSON.stringify({
+    cookie.value = {
       token: data.token,
       user: data.user
-    } as CookieData)
+    } as CookieData
   }
 
   const clearCookie = () => {
@@ -94,6 +99,11 @@ export default defineNuxtPlugin(() => {
   }
 
   const signup: Signup = async (data: any, callback?: Callback | undefined) => {
+
+    if (!config.endpoints.signup) {
+      console.log('No signup endpoint configured in nuxt.config.ts !')
+      return
+    }
 
     try {
       const response = await fetch(config.endpoints.signup, {

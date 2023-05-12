@@ -7,7 +7,11 @@ export function useJwtAuth () {
   const cookie = useCookie<CookieData>('nuxt-jwt-auth-token').value
   const authState = reactive<AuthState>({
     ...cookie,
-    loggedIn: !!cookie
+    loggedIn: !!cookie,
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + cookie?.token
+    }
   })
 
   return authState

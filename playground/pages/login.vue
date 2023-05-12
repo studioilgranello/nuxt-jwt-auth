@@ -56,7 +56,6 @@ function onLogin () {
     password: password.value
   }, () => {
     router.push('/')
-    router.go(0)
   })
 }
 

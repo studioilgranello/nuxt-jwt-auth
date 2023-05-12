@@ -56,7 +56,8 @@ export default defineNuxtConfig({
     endpoints: {
       login: '/login', // Where to request login (POST)
       logout: '/logout', // Where to request logout (POST)
-      user: '/user' // Where to request user data (GET)
+      user: '/user', // Where to request user data (GET)
+      signup: '/signup' // Where to request signup (POST)
     },
     redirects: {
       home: '/', // Where to redirect after successfull login and logout
@@ -244,6 +245,27 @@ async function logout() {
   }
 }
 </script>
+```
+
+---
+
+## Known issues
+
+### Layouts
+
+User data displayed in the nuxt layout (ex. username on the right of an app bar)
+is not updated until a full server page reload.
+So, if you provide a callback to the login method and in this callback you push
+to another route (on the client), user data will not be displayed in the layout.
+
+This is a bug/feature of nuxt itself, which does not refresh layouts data when navigating on the client.
+
+To solve this, add key argument to nuxt-layout:
+
+```vue
+<nuxt-layout :key="$route.path">
+  <nuxt-page />
+</nuxt-layout>
 ```
 
 ## Development

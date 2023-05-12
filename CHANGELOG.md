@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.0.18
+
+- fixed properties update after login
+- added route to playground for testing authorized fetch requests
+- added known issues to readme file
+
 ## v0.0.17
 
 - plugin now exports also plain headers for api fetch (to use in nuxt's useFetch)

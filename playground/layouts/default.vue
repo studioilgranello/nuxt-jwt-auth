@@ -20,6 +20,14 @@
             </li>
             <li class="nav-item">
               <a
+                href="/profile"
+                class="nav-link"
+              >
+                Profile
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
                 href="/logout"
                 class="nav-link"
               >
