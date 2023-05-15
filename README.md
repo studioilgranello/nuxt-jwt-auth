@@ -249,6 +249,39 @@ async function logout() {
 
 ---
 
+### Setting cookie data externally
+In special cases, you can manage authentication externally and set token and user data
+by using `setTokenAndData` function.
+
+```vue
+<script setup>
+const { $jwtAuth } = useNuxtApp()
+
+async function externalLogin() {
+  try {
+    // special login executed externally
+
+    const token = "1|TjVJavoOkerwXViiRwLBLsd1xGSRoYosiO87zSEr"
+    const user = {
+      "name": "Mario",
+      "surname": "Rossi",
+      "address": "Fake St. 123"
+    }
+
+    $jwtAuth.setTokenAndData({
+      token,
+      user
+    })
+
+  } catch (e) {
+    // your error handling
+  }
+}
+</script>
+```
+
+---
+
 ## Known issues
 
 ### Layouts

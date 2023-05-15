@@ -1,6 +1,6 @@
 import { ref } from '#imports'
 import { defineNuxtPlugin, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions, Callback, Login, Logout, CookieData, AuthState, Signup } from '../types'
+import { ModuleOptions, Callback, Login, Logout, AuthData, AuthState, Signup } from '../types'
 import { $Fetch, ofetch } from 'ofetch'
 import { useJwtAuth } from './composables'
 
@@ -8,7 +8,7 @@ export default defineNuxtPlugin(() => {
 
   const config: ModuleOptions = useRuntimeConfig().public.nuxtJwtAuth
 
-  const cookie = useCookie<CookieData>('nuxt-jwt-auth-token', {
+  const cookie = useCookie<AuthData>('nuxt-jwt-auth-token', {
     expires: new Date(Date.now() + 12096e5), // 2 weeks from now
     sameSite: 'strict'
   })
@@ -31,11 +31,11 @@ export default defineNuxtPlugin(() => {
     }
   })
 
-  const setCookie = (data: CookieData) => {
+  const setCookie = (data: AuthData) => {
     cookie.value = {
       token: data.token,
       user: data.user
-    } as CookieData
+    } as AuthData
   }
 
   const clearCookie = () => {
@@ -65,7 +65,7 @@ export default defineNuxtPlugin(() => {
       })
 
       if (response?.token && response?.user) {
-        setCookie(response as CookieData)
+        setCookie(response as AuthData)
       }
 
       if (callback !== undefined) {
@@ -115,7 +115,7 @@ export default defineNuxtPlugin(() => {
       })
 
       if (response?.token && response?.user) {
-        setCookie(response as CookieData)
+        setCookie(response as AuthData)
       }
 
       if (callback !== undefined) {
@@ -131,6 +131,7 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       jwtAuth: {
+        setTokenAndUser: setCookie,
         login,
         logout,
         signup,

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.19
+
+- added setTokenAndUser function for setting cookie data externally
+
 ## v0.0.18
 
 - fixed properties update after login

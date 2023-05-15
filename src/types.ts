@@ -19,12 +19,12 @@ export interface ModuleOptions {
   redirects: Redirects
 }
 
-export interface CookieData {
+export interface AuthData {
   user: any
   token: string | null
 }
 
-export interface AuthState extends CookieData {
+export interface AuthState extends AuthData {
   loggedIn: boolean
   headers: HeadersInit
 }
