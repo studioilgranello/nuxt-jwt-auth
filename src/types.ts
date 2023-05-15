@@ -31,6 +31,8 @@ export interface AuthState extends AuthData {
 
 export type Callback = (response: any) => void
 
+export type SetTokenAndUser = (data: AuthData) => void
+
 export type Login = (credentials: any, callback?: Callback | undefined) => Promise<void>
 
 export type GetUser = <T>() => Promise<T|null>
@@ -40,9 +42,8 @@ export type Logout = (callback?: Callback | undefined) => Promise<void>
 export type Signup = (data: any, callback?: Callback | undefined) => Promise<void>
 
 export interface JwtAuthPlugin {
-  state: AuthState
+  setTokenAndUser: SetTokenAndUser
   login: Login
-  getUser: GetUser
   logout: Logout
   signup: Signup
   fetch: $Fetch

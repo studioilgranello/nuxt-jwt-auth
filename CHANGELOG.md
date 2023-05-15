@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.20
+
+- fix
+
 ## v0.0.19
 
 - added setTokenAndUser function for setting cookie data externally

@@ -268,7 +268,7 @@ async function externalLogin() {
       "address": "Fake St. 123"
     }
 
-    $jwtAuth.setTokenAndData({
+    $jwtAuth.setTokenAndUser({
       token,
       user
     })
