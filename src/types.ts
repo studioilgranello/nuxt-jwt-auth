@@ -33,6 +33,10 @@ export type Callback = (response: any) => void
 
 export type SetTokenAndUser = (data: AuthData) => void
 
+export type SetToken = (token: string) => void
+
+export type SetUser = (user: any) => void
+
 export type Login = (credentials: any, callback?: Callback | undefined) => Promise<void>
 
 export type GetUser = <T>() => Promise<T|null>
@@ -43,6 +47,8 @@ export type Signup = (data: any, callback?: Callback | undefined) => Promise<voi
 
 export interface JwtAuthPlugin {
   setTokenAndUser: SetTokenAndUser
+  setToken: SetToken
+  setUser: SetUser
   login: Login
   logout: Logout
   signup: Signup
