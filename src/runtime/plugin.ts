@@ -38,6 +38,20 @@ export default defineNuxtPlugin(() => {
     } as AuthData
   }
 
+  const setUser = (user: any) => {
+    cookie.value = {
+      ...cookie.value,
+      user
+    }
+  }
+
+  const setToken = (token: string) => {
+    cookie.value = {
+      ...cookie.value,
+      token
+    }
+  }
+
   const clearCookie = () => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
@@ -132,6 +146,8 @@ export default defineNuxtPlugin(() => {
     provide: {
       jwtAuth: {
         setTokenAndUser: setCookie,
+        setUser,
+        setToken,
         login,
         logout,
         signup,

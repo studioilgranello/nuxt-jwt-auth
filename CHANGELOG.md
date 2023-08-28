@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.21
+
+- added setToken and setUser functions
+
 ## v0.0.20
 
 - fix

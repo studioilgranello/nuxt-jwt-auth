@@ -251,7 +251,7 @@ async function logout() {
 
 ### Setting cookie data externally
 In special cases, you can manage authentication externally and set token and user data
-by using `setTokenAndData` function.
+by using `setUser`, `setToken` or `setTokenAndUser` functions.
 
 ```vue
 <script setup>
@@ -267,12 +267,16 @@ async function externalLogin() {
       "surname": "Rossi",
       "address": "Fake St. 123"
     }
+    
+    $jwtAuth.setToken(token)
+    $jwtAuth.setUser(user)
 
+    // same as
     $jwtAuth.setTokenAndUser({
       token,
       user
     })
-
+    
   } catch (e) {
     // your error handling
   }
