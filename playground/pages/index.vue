@@ -14,11 +14,15 @@
 <script setup lang="ts">
 import { computed, useJwtAuth } from '#imports'
 
-const { user, loggedIn } = useJwtAuth()
+interface User {
+  name: string
+}
+
+const { user, loggedIn } = useJwtAuth<User>()
 
 const title = computed(() => {
   if (loggedIn) {
-    return 'Welcome back, ' + user?.name
+    return 'Welcome back, ' + user.value?.name
   } else {
     return 'Hello, handsome stranger'
   }

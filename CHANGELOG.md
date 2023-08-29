@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v0.0.23
+
+- user, token and loggedIn variables are now computed properties
+- added possibility to specify user type
+- fix
+
 ## v0.0.22
 
 - fix

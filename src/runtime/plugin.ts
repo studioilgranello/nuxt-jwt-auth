@@ -1,8 +1,7 @@
-import { ref } from '#imports'
+import { ref, useState, watch } from '#imports'
 import { defineNuxtPlugin, addRouteMiddleware, useCookie, useRuntimeConfig } from '#app'
-import { ModuleOptions, Callback, Login, Logout, AuthData, AuthState, Signup } from '../types'
+import { ModuleOptions, Callback, Login, Logout, AuthData, Signup } from '../types'
 import { $Fetch, ofetch } from 'ofetch'
-import { useJwtAuth } from './composables'
 
 export default defineNuxtPlugin(() => {
 
@@ -13,52 +12,56 @@ export default defineNuxtPlugin(() => {
     sameSite: 'strict'
   })
 
-  const authState: AuthState = useJwtAuth()
+  const authData = useState('data', () => cookie.value)
+
+  watch(authData, () => {
+    cookie.value = authData.value
+  }, { deep: true })
 
   addRouteMiddleware('auth', async () => {
     // using cookie value instead of authState.loggedIn because
     // when navigating to protected route right after login (without full server reload)
     // authState is not updated
-    if (!cookie.value?.token) {
+    if (!authData.value?.token) {
       return config.redirects.login
     }
   })
 
   addRouteMiddleware('guest', async () => {
     // see above
-    if (cookie.value?.token) {
+    if (authData.value?.token) {
       return config.redirects.home
     }
   })
 
-  const setCookie = (data: AuthData) => {
-    cookie.value = {
+  const setAuthData = (data: AuthData) => {
+    authData.value = {
       token: data.token,
       user: data.user
     } as AuthData
   }
 
   const setUser = (user: any) => {
-    cookie.value = {
-      ...cookie.value,
+    authData.value = {
+      ...authData.value,
       user
     }
   }
 
   const setToken = (token: string) => {
-    cookie.value = {
-      ...cookie.value,
+    authData.value = {
+      ...authData.value,
       token
     }
   }
 
-  const clearCookie = () => {
+  const clearAuthData = () => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
   const authorizedRequestHeaders = ref<HeadersInit>({
     Accept: 'application/json',
-    Authorization: 'Bearer ' + authState?.token
+    Authorization: 'Bearer ' + authData.value?.token
   })
 
   const fetch: $Fetch = ofetch.create({
@@ -79,7 +82,7 @@ export default defineNuxtPlugin(() => {
       })
 
       if (response?.token && response?.user) {
-        setCookie(response as AuthData)
+        setAuthData(response as AuthData)
       }
 
       if (callback !== undefined) {
@@ -106,7 +109,7 @@ export default defineNuxtPlugin(() => {
       console.log(error)
     } finally {
 
-      clearCookie()
+      clearAuthData()
       window.location.replace(config.redirects.home)
 
     }
@@ -129,7 +132,7 @@ export default defineNuxtPlugin(() => {
       })
 
       if (response?.token && response?.user) {
-        setCookie(response as AuthData)
+        setAuthData(response as AuthData)
       }
 
       if (callback !== undefined) {
@@ -145,7 +148,7 @@ export default defineNuxtPlugin(() => {
   return {
     provide: {
       jwtAuth: {
-        setTokenAndUser: setCookie,
+        setTokenAndUser: setAuthData,
         setUser,
         setToken,
         login,

@@ -1,4 +1,5 @@
 import { $Fetch } from 'ofetch'
+import { ComputedRef } from 'vue'
 
 export interface Endpoints {
   login: string
@@ -24,8 +25,10 @@ export interface AuthData {
   token: string | null
 }
 
-export interface AuthState extends AuthData {
-  loggedIn: boolean
+export interface AuthState<T> {
+  user: ComputedRef<T>
+  token: ComputedRef<string | null>
+  loggedIn: ComputedRef<boolean>
   headers: HeadersInit
 }
 
@@ -38,8 +41,6 @@ export type SetToken = (token: string) => void
 export type SetUser = (user: any) => void
 
 export type Login = (credentials: any, callback?: Callback | undefined) => Promise<void>
-
-export type GetUser = <T>() => Promise<T|null>
 
 export type Logout = (callback?: Callback | undefined) => Promise<void>
 

@@ -1,19 +1,19 @@
-import {reactive} from 'vue'
-import { useCookie } from '#app'
-import { AuthState, AuthData } from '../types'
+import { computed, Ref } from 'vue'
+import { useState } from '#app'
+import { AuthData, AuthState } from '../types'
 
-export function useJwtAuth () {
+export function useJwtAuth<T = any> () {
 
-  const cookie = useCookie<AuthData>('nuxt-jwt-auth-token').value
-  const authState = reactive<AuthState>({
-    ...cookie,
-    loggedIn: !!cookie,
+  const data: Ref<AuthData> = useState('data')
+
+  return {
+    token: computed(() => data.value?.token),
+    user: computed(() => data.value?.user),
+    loggedIn: computed(() => !!data.value),
     headers: {
       Accept: 'application/json',
-      Authorization: 'Bearer ' + cookie?.token
+      Authorization: 'Bearer ' + data.value?.token
     }
-  })
+  } as AuthState<T>
 
-  return authState
-  
 }

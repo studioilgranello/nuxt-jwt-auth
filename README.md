@@ -196,6 +196,8 @@ definePageMeta({
 ### Get the user (useJwtAuth)
 This modules provides the useJwtAuth composable, which you can use to obtain useful auth-related data, such as `user`, `token`, `loggedIn` state.
 
+⚠️ All variables obtained from useJwtAuth are **computed properties**, to reflect changes in cookie data.
+
 ```vue
 <template>
   <h1>Hello,</h1>
@@ -204,6 +206,22 @@ This modules provides the useJwtAuth composable, which you can use to obtain use
 
 <script setup>
 const { user, loggedIn } = useJwtAuth()
+
+</script>
+```
+
+ℹ️ If using typescript, you can specify the user type!
+
+```vue
+<script setup lang="ts">
+
+interface User {
+  name: string
+}  
+  
+const { user, loggedIn } = useJwtAuth<User>()
+  
+console.log('user name is', user.name) // user.name is of type string now 
 
 </script>
 ```
