@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.24
+
+- Authorization header not sent if not logged in
+
 ## v0.0.23
 
 - user, token and loggedIn variables are now computed properties

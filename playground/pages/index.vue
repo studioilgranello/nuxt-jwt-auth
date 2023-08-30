@@ -21,7 +21,7 @@ interface User {
 const { user, loggedIn } = useJwtAuth<User>()
 
 const title = computed(() => {
-  if (loggedIn) {
+  if (loggedIn.value) {
     return 'Welcome back, ' + user.value?.name
   } else {
     return 'Hello, handsome stranger'
