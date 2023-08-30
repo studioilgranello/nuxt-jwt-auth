@@ -29,7 +29,7 @@ export default defineNuxtPlugin(() => {
 
   addRouteMiddleware('guest', async () => {
     // see above
-    if (!cookie.value?.token) {
+    if (cookie.value?.token) {
       return config.redirects.home
     }
   })
@@ -60,7 +60,7 @@ export default defineNuxtPlugin(() => {
   }
 
   const authorizedRequestHeaders = ref<HeadersInit>(
-    authData.value.token ? {
+    authData.value?.token ? {
       Accept: 'application/json',
       Authorization: 'Bearer ' + authData.value.token
     } : { Accept: 'application/json' })
