@@ -22,14 +22,14 @@ export default defineNuxtPlugin(() => {
     // using cookie value instead of authState.loggedIn because
     // when navigating to protected route right after login (without full server reload)
     // authState is not updated
-    if (!authData.value?.token) {
+    if (!cookie.value?.token) {
       return config.redirects.login
     }
   })
 
   addRouteMiddleware('guest', async () => {
     // see above
-    if (authData.value?.token) {
+    if (!cookie.value?.token) {
       return config.redirects.home
     }
   })
@@ -59,10 +59,11 @@ export default defineNuxtPlugin(() => {
     useCookie('nuxt-jwt-auth-token').value = null
   }
 
-  const authorizedRequestHeaders = ref<HeadersInit>({
-    Accept: 'application/json',
-    Authorization: 'Bearer ' + authData.value?.token
-  })
+  const authorizedRequestHeaders = ref<HeadersInit>(
+    authData.value.token ? {
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + authData.value.token
+    } : { Accept: 'application/json' })
 
   const fetch: $Fetch = ofetch.create({
     baseURL: config.baseUrl,

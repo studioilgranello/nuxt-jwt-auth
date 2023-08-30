@@ -2,7 +2,7 @@ import { computed, Ref } from 'vue'
 import { useState } from '#app'
 import { AuthData, AuthState } from '../types'
 
-export function useJwtAuth<T = any> () {
+export function useJwtAuth<T = any>() {
 
   const data: Ref<AuthData> = useState('data')
 
@@ -12,14 +12,16 @@ export function useJwtAuth<T = any> () {
 
   const loggedIn = computed(() => !!data.value)
 
+  const headers = computed(() => loggedIn.value ? {
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + data.value.token
+  } : { Accept: 'application/json' })
+
   return {
     token,
     user,
     loggedIn,
-    headers: {
-      Accept: 'application/json',
-      Authorization: loggedIn.value ? 'Bearer ' + token.value : undefined
-    }
+    headers: headers.value
   } as AuthState<T>
 
 }
