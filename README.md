@@ -93,7 +93,7 @@ async function login() {
       // optional callback function
       (data) => {
         console.log(data)
-        router.push('/account')
+        window.location.replace('/')
       }
     )
   } catch (e) {
@@ -103,7 +103,9 @@ async function login() {
 </script>
 ```
 
-Please note that it is requested that the backend responds to the login request with a JSON object containing both token and user properties:
+⚠️ If using custom callback function, you must always navigate to another route using `window.location.replace()`. Some auth data may not be updated if navigating "in-app" with `router.push()` or nuxt's `navigateTo()`
+
+⚠️ It is requested that the backend responds to the login request with a JSON object containing both token and user properties:
 
 ```json
 {

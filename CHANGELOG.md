@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.0.28
+
+- Added readme warning to always navigate using window.location.replace()
+
 ## v0.0.24
 
 - Authorization header not sent if not logged in
