@@ -1,6 +1,6 @@
 {
   "name": "nuxt-jwt-auth",
-  "version": "0.0.28",
+  "version": "1.0.0",
   "description": "A Nuxt module to authenticate on a custom backend (Laravel Sanctum) via jwt token",
   "repository": "studioilgranello/nuxt-jwt-auth",
   "license": "MIT",
