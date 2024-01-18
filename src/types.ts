@@ -40,11 +40,11 @@ export type SetToken = (token: string) => void
 
 export type SetUser = (user: any) => void
 
-export type Login = (credentials: any, callback?: Callback | undefined) => Promise<void>
+export type Login = (credentials: FormData, callback?: Callback | undefined) => Promise<void>
 
 export type Logout = (callback?: Callback | undefined) => Promise<void>
 
-export type Signup = (data: any, callback?: Callback | undefined) => Promise<void>
+export type Signup = (data: FormData, callback?: Callback | undefined) => Promise<void>
 
 export interface JwtAuthPlugin {
   setTokenAndUser: SetTokenAndUser

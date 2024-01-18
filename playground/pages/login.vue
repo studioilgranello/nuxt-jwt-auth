@@ -37,7 +37,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { ref, useNuxtApp, definePageMeta, useRouter } from '#imports'
 
 const {$jwtAuth} = useNuxtApp()
@@ -50,11 +53,11 @@ definePageMeta({
 const email = ref('')
 const password = ref('')
 
-function onLogin () {
-  $jwtAuth.login({
-    email: email.value,
-    password: password.value
-  }, () => {
+function onLogin() {
+  const formData = new FormData()
+  formData.append('email', email.value)
+  formData.append('password', password.value)
+  $jwtAuth.login(formData, () => {
     router.push('/')
   })
 }

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.0
+
+- BREAKING: Changed form input for login and signup from type any to FormData
+
 ## v0.0.28
 
 - Added readme warning to always navigate using window.location.replace()

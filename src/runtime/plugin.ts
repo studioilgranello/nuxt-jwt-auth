@@ -71,12 +71,12 @@ export default defineNuxtPlugin(() => {
     headers: authorizedRequestHeaders.value
   })
 
-  const login: Login = async (credentials: any, callback?: Callback | undefined) => {
+  const login: Login = async (credentials: FormData, callback?: Callback | undefined) => {
 
     try {
       const response = await fetch(config.endpoints.login, {
         method: 'POST',
-        body: JSON.stringify(credentials),
+        body: credentials,
         headers: {
           Accept: 'application/json'
         } as HeadersInit
@@ -116,7 +116,7 @@ export default defineNuxtPlugin(() => {
     }
   }
 
-  const signup: Signup = async (data: any, callback?: Callback | undefined) => {
+  const signup: Signup = async (data: FormData, callback?: Callback | undefined) => {
 
     if (!config.endpoints.signup) {
       console.log('No signup endpoint configured in nuxt.config.ts !')
@@ -126,7 +126,7 @@ export default defineNuxtPlugin(() => {
     try {
       const response = await fetch(config.endpoints.signup, {
         method: 'POST',
-        body: JSON.stringify(data),
+        body: data,
         headers: {
           Accept: 'application/json'
         } as HeadersInit
