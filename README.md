@@ -1,5 +1,11 @@
 # Nuxt JWT Auth
 
+**This package is no longer mantained.**
+
+**We recommend switching to https://github.com/sidebase/nuxt-auth or https://github.com/manchenkoff/nuxt-auth-sanctum**
+
+---
+
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![License][license-src]][license-href]
